@@ -80,10 +80,23 @@ public class StepDefs{
 					driver = new ChromeDriver();
 					break;
 				default:
-					System.setProperty("webdriver.chrome.driver", "C:\\GeckoDriver\\geckodriver.exe"); // need to document this
+					System.setProperty("webdriver.chrome.driver", "C:\\chromedriver\\chromedriver.exe"); // need to document this
 					driver = new ChromeDriver();
 					break;
 			}
+		default:	
+		switch (osSystem){
+			case "Mac OS X":	
+				System.setProperty("webdriver.gecko.driver", "//geckodriver//geckodriver"); // need to document this
+				driver = new FirefoxDriver();
+				break;
+			default:
+				System.setProperty("webdriver.gecko.driver", "C:\\GeckoDriver\\geckodriver.exe"); // need to document this
+				driver = new FirefoxDriver();
+				break;
+		}
+			
+			
 			
 			break;
 		
@@ -91,7 +104,7 @@ public class StepDefs{
 		
 		driver.manage().window().maximize();
 	    driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-	    driver.get("http://hotel-test.equalexperts.io/"); //goto the CRUD portal
+	    driver.get("http://hotel-test.equalexperts.io/"); //goto the page
 	      
 		}
 
