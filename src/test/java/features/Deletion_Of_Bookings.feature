@@ -17,3 +17,5 @@ Then My booking is created
 And I click the Delete button
 
 Then My booking is deleted
+
+And I close the driver instance
