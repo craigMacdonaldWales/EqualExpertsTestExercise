@@ -41,6 +41,9 @@ public class StepDefs{
 	public static String CheckIn;
 	public static String CheckOut;
 	public static Number displayRowCount;
+	// AUT input entities
+	
+	public static HashMap<String,String> fieldDescGrid;
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -60,47 +63,44 @@ public class StepDefs{
 		
 		System.out.println(osSystem);
 		
-		switch (Browser){
-		case "Firefox":
-			switch (osSystem){
-				case "Mac OS X":	
-					System.setProperty("webdriver.gecko.driver", "//geckodriver//geckodriver"); // need to document this
-					driver = new FirefoxDriver();
-					break;
-				default:
-					System.setProperty("webdriver.gecko.driver", "C:\\GeckoDriver\\geckodriver.exe"); // need to document this
-					driver = new FirefoxDriver();
-					break;
-			}
-			break;
-		case "Chrome":	
-			switch (osSystem){
-				case "Mac OS X":	
-					System.setProperty("webdriver.chrome.driver", "//chromedriver//chromedriver"); // need to document this
-					driver = new ChromeDriver();
-					break;
-				default:
-					System.setProperty("webdriver.chrome.driver", "C:\\chromedriver\\chromedriver.exe"); // need to document this
-					driver = new ChromeDriver();
-					break;
-			}
-		default:	
+		
 		switch (osSystem){
 			case "Mac OS X":	
-				System.setProperty("webdriver.gecko.driver", "//geckodriver//geckodriver"); // need to document this
-				driver = new FirefoxDriver();
-				break;
-			default:
-				System.setProperty("webdriver.gecko.driver", "C:\\GeckoDriver\\geckodriver.exe"); // need to document this
-				driver = new FirefoxDriver();
-				break;
-		}
-			
-			
-			
-			break;
+	
+				switch (Browser){
+					case "Firefox":
+						System.setProperty("webdriver.gecko.driver", "//geckodriver//geckodriver"); // need to document this
+						driver = new FirefoxDriver();
+						break;
+					case "Chrome":	
+						System.setProperty("webdriver.chrome.driver", "//chromedriver//chromedriver"); // need to document this
+						driver = new ChromeDriver();
+						break;
+					default:
+						System.setProperty("webdriver.gecko.driver", "//geckodriver//geckodriver"); // need to document this
+						driver = new FirefoxDriver();
+						break;
+				}
+					
+				break; // end of mac os options
+					
+			default: // windows
+				switch (Browser){
+					case "Firefox":
+						System.setProperty("webdriver.gecko.driver", "C:\\GeckoDriver\\geckodriver.exe"); // need to document this
+						driver = new FirefoxDriver();
+						break;
+					case "Chrome":	
+						System.setProperty("webdriver.chrome.driver", "C:\\chromedriver_win32\\chromedriver.exe"); // need to document this
+						driver = new ChromeDriver();
+						break;
+					default:
+						System.setProperty("webdriver.gecko.driver", "C:\\GeckoDriver\\geckodriver.exe"); // need to document this
+						driver = new FirefoxDriver();
+						break;			
+					}
+			}
 		
-		}
 		
 		driver.manage().window().maximize();
 	    driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
@@ -109,10 +109,24 @@ public class StepDefs{
 		}
 
 	@Given("^I create a new booking with the following data$")
-	public void i_have_entered_computer_details(DataTable computerDetails) throws Throwable {
+	public void i_have_entered_computer_details(DataTable inputData) throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
 		
-		List<Map<String,String>> data = computerDetails.asMaps(String.class,String.class);
+		// GUI descriptors here - centralised maintenance
+		//fieldDescGrid.put("Firstname","//input[@id='firstname']");
+		//fieldDescGrid.put("Surname","//input[@id='lastname']");
+		//fieldDescGrid.put("Price","//input[@id='totalprice']");
+		//fieldDescGrid.put("Deposit","//select[@id='depositpaid']");
+		//fieldDescGrid.put("CheckIn","//input[@id='checkin']");
+		//fieldDescGrid.put("CheckOut","//input[@id='checkout']");
+		// this will only work if the GUI hashmap and inputData list use the same references (case sensitive)
+		// is it worth lower-casing the field references?
+		
+		List<Map<String,String>> data = inputData.asMaps(String.class,String.class);
+		
+		//CoreFunctions.AUTFormInput(fieldDescGrid, data); // handle data input
+		
+		
 		
 		int milliAppend = dataUtils.getTimeInt();
 		String appendString = Integer.toString(milliAppend);
@@ -127,8 +141,7 @@ public class StepDefs{
 		System.out.println(Deposit);
 		
 		CheckIn = data.get(0).get("CheckIn");
-		// call code to handle date prep here here
-		CheckIn = dataUtils.dateprep(CheckIn);
+		CheckIn = dataUtils.dateprep(CheckIn); // call code to handle date prep here here
 		System.out.println(CheckIn);
 		
 		CheckOut = data.get(0).get("CheckOut");

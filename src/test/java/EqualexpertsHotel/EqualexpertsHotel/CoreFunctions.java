@@ -1,6 +1,10 @@
 package EqualexpertsHotel.EqualexpertsHotel;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Iterator;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -100,5 +104,27 @@ public class CoreFunctions {
 		
 	}
 	
+	public static String AUTFormInput (HashMap GUI, List inputValues){
+		
+		// find the number of items we want to process.
+		int GUICount = GUI.size(); // loop control.
+		Collection GUIKey = GUI.keySet();
+		int count = GUIKey.size();
+	
+		Iterator it = GUI.entrySet().iterator();
+	    while (it.hasNext()) {
+	        Map.Entry pair = (Map.Entry)it.next();
+	        System.out.println(pair.getKey() + " = " + pair.getValue());
+	       
+	        it.remove(); // avoids a ConcurrentModificationException
+	    }
+		
+		
+
+		
+		
+		
+		return "true";
+	}
 	
 }
