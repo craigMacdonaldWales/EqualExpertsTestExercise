@@ -2,6 +2,7 @@ package EqualexpertsHotel.EqualexpertsHotel;
 
 import static org.junit.Assert.assertEquals;
 
+import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,8 +30,7 @@ import cucumber.api.java.en.When;
 
 public class StepDefs{
 
-	public static WebDriver driver;
-	public static String osSystem = System.getProperty("os.name");
+	
 	//public static String Name;
 	public static HashMap<String,String> scenarioInfoContainer;
 	public static String Browser;
@@ -41,9 +41,15 @@ public class StepDefs{
 	public static String CheckIn;
 	public static String CheckOut;
 	public static Number displayRowCount;
-	// AUT input entities
-	
-	public static HashMap<String,String> fieldDescGrid;
+	String[] fieldDescGrid = new String[]{ // gui element array, in tab order
+			"Firstname=//input[@id='firstname']",
+			"Surname=//input[@id='lastname']",
+			"Price=//input[@id='totalprice']",
+			"Deposit=//select[@id='depositpaid']",
+			"CheckIn=//input[@id='checkin']",
+			"CheckOut=//input[@id='checkout']"
+			};
+	public static HashMap<String,String> AssertionGrid;
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -55,130 +61,34 @@ public class StepDefs{
 	public void user_is_on_Home_Page() throws Throwable {
 		//WebDriver driver;
 		//String osSystem = 
-	
-		Browser = "Chrome";
-		//Browser = "Firefox";
-		
-		//ActorLibrary.scenarioExecution(1);
-		
-		System.out.println(osSystem);
-		
-		
-		switch (osSystem){
-			case "Mac OS X":	
-	
-				switch (Browser){
-					case "Firefox":
-						System.setProperty("webdriver.gecko.driver", "//geckodriver//geckodriver"); // need to document this
-						driver = new FirefoxDriver();
-						break;
-					case "Chrome":	
-						System.setProperty("webdriver.chrome.driver", "//chromedriver//chromedriver"); // need to document this
-						driver = new ChromeDriver();
-						break;
-					default:
-						System.setProperty("webdriver.gecko.driver", "//geckodriver//geckodriver"); // need to document this
-						driver = new FirefoxDriver();
-						break;
-				}
-					
-				break; // end of mac os options
-					
-			default: // windows
-				switch (Browser){
-					case "Firefox":
-						System.setProperty("webdriver.gecko.driver", "C:\\GeckoDriver\\geckodriver.exe"); // need to document this
-						driver = new FirefoxDriver();
-						break;
-					case "Chrome":	
-						System.setProperty("webdriver.chrome.driver", "C:\\chromedriver_win32\\chromedriver.exe"); // need to document this
-						driver = new ChromeDriver();
-						break;
-					default:
-						System.setProperty("webdriver.gecko.driver", "C:\\GeckoDriver\\geckodriver.exe"); // need to document this
-						driver = new FirefoxDriver();
-						break;			
-					}
-			}
-		
-		
-		driver.manage().window().maximize();
-	    driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-	    driver.get("http://hotel-test.equalexperts.io/"); //goto the page
-	      
+		CoreFunctions.browserLaunch("Chrome","http://hotel-test.equalexperts.io/");
 		}
 
 	@Given("^I create a new booking with the following data$")
 	public void i_have_entered_computer_details(DataTable inputData) throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		
-		// GUI descriptors here - centralised maintenance
-		//fieldDescGrid.put("Firstname","//input[@id='firstname']");
-		//fieldDescGrid.put("Surname","//input[@id='lastname']");
-		//fieldDescGrid.put("Price","//input[@id='totalprice']");
-		//fieldDescGrid.put("Deposit","//select[@id='depositpaid']");
-		//fieldDescGrid.put("CheckIn","//input[@id='checkin']");
-		//fieldDescGrid.put("CheckOut","//input[@id='checkout']");
-		// this will only work if the GUI hashmap and inputData list use the same references (case sensitive)
-		// is it worth lower-casing the field references?
-		
+	
 		List<Map<String,String>> data = inputData.asMaps(String.class,String.class);
+				
+		AssertionGrid = CoreFunctions.AUTFormInput(fieldDescGrid, data);
+        //CoreFunctions.AUTFormInput(fieldDescGrid, data); // handle data input
+	   // System.out.println("Assertiongrid = " + AssertionGrid);
 		
-		//CoreFunctions.AUTFormInput(fieldDescGrid, data); // handle data input
+		Firstname = AssertionGrid.get("Firstname");
+		Surname = AssertionGrid.get("Surname");
+		Price = AssertionGrid.get("Price");
+		Deposit = AssertionGrid.get("Deposit");
+		CheckIn = AssertionGrid.get("CheckIn");	
+		CheckOut = AssertionGrid.get("CheckOut");	
 		
+		System.out.println(Firstname + " " + Surname);
 		
-		
-		int milliAppend = dataUtils.getTimeInt();
-		String appendString = Integer.toString(milliAppend);
-		// mapping & console output	
-		Firstname = (data.get(0).get("Firstname") + appendString);
-		System.out.println(Firstname);
-		Surname = data.get(0).get("Surname");
-		System.out.println(Surname);
-		Price = data.get(0).get("Price");
-		System.out.println(Price);
-		Deposit = data.get(0).get("Deposit");
-		System.out.println(Deposit);
-		
-		CheckIn = data.get(0).get("CheckIn");
-		CheckIn = dataUtils.dateprep(CheckIn); // call code to handle date prep here here
-		System.out.println(CheckIn);
-		
-		CheckOut = data.get(0).get("CheckOut");
-		CheckOut = dataUtils.dateprep(CheckOut);
-		System.out.println(CheckOut);
-	
-		driver.findElement(By.xpath("//input[@id='firstname']")).sendKeys(Firstname);
-		driver.findElement(By.xpath("//input[@id='lastname']")).sendKeys(Surname);
-		driver.findElement(By.xpath("//input[@id='totalprice']")).sendKeys(Price);
-	   // driver.findElement(By.xpath("//select[@id='depositpaid']")).click();
-	    //driver.wait();
-		    
-	    switch (osSystem){ // select behaviours - variance neccesary?
-		case "Mac OS X":	
-			 // need to document this
-			//Thread.sleep(1000);
-			//new Select(driver.findElement(By.xpath("//select[@id='depositpaid']"))).selectByVisibleText("false");
-			//driver.findElement(By.xpath("//select[@id='depositpaid']")).click();
-			driver.findElement(By.xpath("//select[@id='depositpaid']")).sendKeys(Deposit);
-			
-			break;
-		default:
-			System.out.println("windows list select");
-			//driver.findElement(By.xpath("//select[@id='depositpaid']")).click();
-			driver.findElement(By.xpath("//select[@id='depositpaid']")).sendKeys(Deposit);
-			break;
-	    }
-	
-	    driver.findElement(By.xpath("//input[@id='checkin']")).sendKeys(CheckIn);
-		driver.findElement(By.xpath("//input[@id='checkout']")).sendKeys(CheckOut);
-	    
 	}
 	
 	@When("^I click the Save button$")
 	public void i_click_the_Save_button() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		driver.findElement(By.xpath("//input[@value=' Save ']")).click();
+		CoreFunctions.driver.findElement(By.xpath("//input[@value=' Save ']")).click();
 		// it would be nice to package this up into a generic wait method in a core class
 	}
 	
@@ -192,25 +102,25 @@ public class StepDefs{
 		//String displayRow = CoreFunctions.gridInterrogation("//div", Firstname); 
 		assertEquals(saveResponse, "true");
 		//function to interrogate table and extract row using name field as index.
-		
+		//Firstname = CoreFunctions.AssertionGrid.get(Firstname);
 		String displayRow = CoreFunctions.gridInterrogation("//div",Firstname); // look for the first name in the grid, return the appropriate row for assertion.
 		
-		String DisplayedFirstName = StepDefs.driver.findElement(By.xpath("//div[@id='" + displayRow + "']/div/p")).getText();
+		String DisplayedFirstName = CoreFunctions.driver.findElement(By.xpath("//div[@id='" + displayRow + "']/div/p")).getText();
 		assertEquals(Firstname, DisplayedFirstName);
 		
-		String DisplayedSurname = StepDefs.driver.findElement(By.xpath("//div[@id='" + displayRow + "']/div[2]/p")).getText();
+		String DisplayedSurname = CoreFunctions.driver.findElement(By.xpath("//div[@id='" + displayRow + "']/div[2]/p")).getText();
 		assertEquals(Surname, DisplayedSurname);
 		
-		String DisplayedPrice = StepDefs.driver.findElement(By.xpath("//div[@id='" + displayRow + "']/div[3]/p")).getText();
+		String DisplayedPrice = CoreFunctions.driver.findElement(By.xpath("//div[@id='" + displayRow + "']/div[3]/p")).getText();
 		assertEquals(Price, DisplayedPrice);
 		
-		String DisplayedDeposit = StepDefs.driver.findElement(By.xpath("//div[@id='" + displayRow + "']/div[4]/p")).getText();
+		String DisplayedDeposit = CoreFunctions.driver.findElement(By.xpath("//div[@id='" + displayRow + "']/div[4]/p")).getText();
 		assertEquals(Deposit, DisplayedDeposit);
 		
-		String DisplayedCheckIn = StepDefs.driver.findElement(By.xpath("//div[@id='" + displayRow + "']/div[5]/p")).getText();
+		String DisplayedCheckIn = CoreFunctions.driver.findElement(By.xpath("//div[@id='" + displayRow + "']/div[5]/p")).getText();
 		assertEquals(CheckIn, DisplayedCheckIn);
 		
-		String DisplayedCheckOut = StepDefs.driver.findElement(By.xpath("//div[@id='" + displayRow + "']/div[6]/p")).getText();
+		String DisplayedCheckOut = CoreFunctions.driver.findElement(By.xpath("//div[@id='" + displayRow + "']/div[6]/p")).getText();
 		assertEquals(CheckOut, DisplayedCheckOut);
 		
 	}
@@ -219,7 +129,7 @@ public class StepDefs{
 	public void I_close_the_driver_instance() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
 	    //throw new PendingException();
-		driver.quit();
+		CoreFunctions.driver.quit();
 		
 		
 	}
@@ -236,6 +146,7 @@ public class StepDefs{
 	public void i_click_the_Delete_button() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
 	    
+		System.out.println("searching for row using string of " + Firstname);
 		String displayRowID = CoreFunctions.gridInterrogation("//div",Firstname); 
 		// this gives us the row to delete. It would be better to get the ID number of the record, as this will guarantee identification, but not enough time!
 		System.out.println("scenario record for deletion found, row ID " + displayRowID);
@@ -250,7 +161,7 @@ public class StepDefs{
 		//div[@id='26845']/div[7]/input
 		String DeleteButton = "//div[@id='" + displayRowID + "']/div[7]/input";
 		
-		driver.findElement(By.xpath(DeleteButton)).click();
+		CoreFunctions.driver.findElement(By.xpath(DeleteButton)).click();
 		
 	}
 	

@@ -1,0 +1,47 @@
+
+old step def for booking creation.
+
+int milliAppend = dataUtils.getTimeInt();
+		String appendString = Integer.toString(milliAppend);
+		// mapping & console output	
+		Firstname = (data.get(0).get("Firstname") + appendString);
+		System.out.println(Firstname);
+		Surname = data.get(0).get("Surname");
+		System.out.println(Surname);
+		Price = data.get(0).get("Price");
+		System.out.println(Price);
+		Deposit = data.get(0).get("Deposit");
+		System.out.println(Deposit);
+		
+		CheckIn = data.get(0).get("CheckIn");
+		CheckIn = dataUtils.dateprep(CheckIn); // call code to handle date prep here here
+		System.out.println(CheckIn);
+		
+		CheckOut = data.get(0).get("CheckOut");
+		CheckOut = dataUtils.dateprep(CheckOut);
+		System.out.println(CheckOut);
+	
+		CoreFunctions.driver.findElement(By.xpath("//input[@id='firstname']")).sendKeys(Firstname);
+		CoreFunctions.driver.findElement(By.xpath("//input[@id='lastname']")).sendKeys(Surname);
+		CoreFunctions.driver.findElement(By.xpath("//input[@id='totalprice']")).sendKeys(Price);
+	   // driver.findElement(By.xpath("//select[@id='depositpaid']")).click();
+	    //driver.wait();
+		    
+	    switch (CoreFunctions.osSystem){ // select behaviours - variance neccesary?
+		case "Mac OS X":	
+			 // need to document this
+			//Thread.sleep(1000);
+			//new Select(driver.findElement(By.xpath("//select[@id='depositpaid']"))).selectByVisibleText("false");
+			//driver.findElement(By.xpath("//select[@id='depositpaid']")).click();
+			CoreFunctions.driver.findElement(By.xpath("//select[@id='depositpaid']")).sendKeys(Deposit);
+			
+			break;
+		default:
+			System.out.println("windows list select");
+			//driver.findElement(By.xpath("//select[@id='depositpaid']")).click();
+			CoreFunctions.driver.findElement(By.xpath("//select[@id='depositpaid']")).sendKeys(Deposit);
+			break;
+	    }
+	
+	    CoreFunctions.driver.findElement(By.xpath("//input[@id='checkin']")).sendKeys(CheckIn);
+	    CoreFunctions.driver.findElement(By.xpath("//input[@id='checkout']")).sendKeys(CheckOut);
