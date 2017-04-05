@@ -1,6 +1,8 @@
 @bookingInputValidation
 
 Feature: Input Validation
+Entering numeric values in the firstname and surname fields, an alpha string in the price field, along with non-standard dates will 
+result in the save button being disabled. This feature clicks the save button, and verifies that no new record (new row) is created.
 
 Scenario: creating new booking with invalid field values
 
@@ -13,5 +15,3 @@ When I create a new booking with the following data
 And I click the Save button
 
 Then Creation of the new record is rejected
-
-And I close the driver instance

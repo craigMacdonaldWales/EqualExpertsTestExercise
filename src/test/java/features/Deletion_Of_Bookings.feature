@@ -1,6 +1,7 @@
 @deletebooking
 
 Feature: Delete booking
+Clicking the delete button for a given booking will remove that booking from the booking display.
 
 Scenario: Delete a booking
 
@@ -17,5 +18,3 @@ Then My booking is created
 And I click the Delete button
 
 Then My booking is deleted
-
-And I close the driver instance
